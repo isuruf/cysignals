@@ -832,6 +832,81 @@ def test_try_finally_return():
 
 
 ########################################################################
+# Test interrupt_occurred()                                            #
+########################################################################
+
+def print_interrupt_occurred():
+    """
+    Print the exception which is currently being raised.
+
+    Note that we print instead of return the exception to mess as little
+    as possible with refcounts.
+
+    EXAMPLES::
+
+        >>> from cysignals.tests import *
+        >>> print_interrupt_occurred()
+        no current exception
+
+    """
+    exc = interrupt_occurred()
+    if exc is NULL:
+        print("no current exception")
+    else:
+        refcnt = exc.ob_refcnt
+        print(repr(<object>exc))
+
+
+def test_interrupt_occurred_finally():
+    """
+    TESTS::
+
+        >>> from cysignals.tests import *
+        >>> test_interrupt_occurred_finally()
+        no current exception
+        RuntimeError('test_interrupt_occurred_finally()',)
+        RuntimeError('test_interrupt_occurred_finally()',)
+        no current exception
+
+    """
+    try:
+        try:
+            sig_str("test_interrupt_occurred_finally()")
+        finally:
+            print_interrupt_occurred()  # output 1 and 2
+    except RuntimeError:
+        print_interrupt_occurred()  # output 3
+    else:
+        abort()
+    print_interrupt_occurred()  # output 4
+
+
+def test_interrupt_occurred_dealloc():
+    """
+    TESTS::
+
+        >>> from cysignals.tests import *
+        >>> try:
+        ...     test_interrupt_occurred_dealloc()
+        ... except RuntimeError:
+        ...     pass
+        __dealloc__: RuntimeError('test_interrupt_occurred_dealloc()',)
+        >>> print_interrupt_occurred()
+        no current exception
+
+    """
+    x = DeallocDebug()
+    sig_str("test_interrupt_occurred_dealloc()")
+    abort()
+
+
+cdef class DeallocDebug:
+    def __dealloc__(self):
+        sys.stdout.write("__dealloc__: ")
+        print_interrupt_occurred()
+
+
+########################################################################
 # Test sig_block()/sig_unblock()                                       #
 ########################################################################
 def test_sig_block(long delay=DEFAULT_DELAY):
