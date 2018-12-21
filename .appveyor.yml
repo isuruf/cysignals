@@ -52,6 +52,7 @@ before_build:
           & $python_exe "C:\get-pip.py"
       }
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+  - set CC=cl
   - cd C:\projects\cysignals
   - python%PYTHON_VERSION% -m pip install -r requirements.txt
   - python%PYTHON_VERSION% --version
