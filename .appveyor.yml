@@ -10,7 +10,7 @@ environment:
     # The list here is complete (excluding Python 2.6, which
     # isn't covered by this document) at the time of writing.
     - OS: Windows_NT
-      PYTHON: "C:\\Python35-x64"
+      PYTHON: "C:\\Python36-x64"
       TOOLSPATH: "C:\\mingw-w64\\x86_64-7.2.0-posix-seh-rt_v5-rev1\\mingw64\\bin;C:\\MinGW\\bin;C:\\MinGW\\msys\\1.0\\bin"
       MAKE: mingw32-make
     - OS: Windows_NT
@@ -51,6 +51,7 @@ before_build:
               -ArgumentList "-q -P $python,$python-devel,gcc-core,gcc-g++"
           & $python_exe "C:\get-pip.py"
       }
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - cd C:\projects\cysignals
   - python%PYTHON_VERSION% -m pip install -r requirements.txt
   - python%PYTHON_VERSION% --version
