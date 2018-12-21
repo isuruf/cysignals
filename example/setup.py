@@ -6,13 +6,6 @@ from distutils.command.build import build as _build
 import sys
 import os
 
-# if on windows platform, patch distutils lib.
-if sys.platform == "win32":
-    utils_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'winutil')
-    sys.path.append(utils_path)
-    from patchdistutils import runtime_patch
-    runtime_patch()
-
 # Option "-D_hypot=hypot" is mandatory for mingw64
 # See : https://github.com/python/cpython/pull/880
 extensions = [Extension('cysignals_example',
