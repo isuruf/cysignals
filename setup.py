@@ -48,13 +48,6 @@ undef_macros = ["_FORTIFY_SOURCE"]
 scripts = []
 data_files = []
 
-# if on windows platform, patch distutils lib.
-if sys.platform == "win32":
-    utilspath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'winutil')
-    sys.path.append(utilspath)
-    from patchdistutils import runtime_patch
-    runtime_patch()
-
 kwds = dict(include_dirs=[opj("src"),
                           opj("src", "cysignals")],
             depends=depends,
