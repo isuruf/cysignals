@@ -53,6 +53,12 @@ before_build:
       }
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
   - set CC=cl
+  - appveyor DownloadFile https://anaconda.org/conda-forge/pthreads-win32/2.9.1/download/win-64/pthreads-win32-2.9.1-hfa6e2cd_3.tar.bz2 -FileName pthreads.tar.bz2
+  - 7z x pthreads.tar.bz2
+  - 7z x -oC:\pthreads pthreads.tar
+  - xcopy C:\pthreads\Library\include\ %PYTHON%\include /E
+  - xcopy C:\pthreads\Library\lib\ %PYTHON%\libs /E
+  - xcopy C:\pthreads\Library\bin\ %PYTHON%\DLLs /E
   - cd C:\projects\cysignals
   - python%PYTHON_VERSION% -m pip install -r requirements.txt
   - python%PYTHON_VERSION% --version
